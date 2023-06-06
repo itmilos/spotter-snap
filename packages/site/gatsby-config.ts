@@ -17,6 +17,12 @@ const config: GatsbyConfig = {
         display: 'standalone',
       },
     },
+    {
+      resolve: 'gatsby-plugin-react-redux',
+      options: {
+        pathToCreateStoreModule: './src/store.ts',
+      },
+    },
   ],
 };
 
