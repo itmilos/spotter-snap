@@ -15,7 +15,7 @@ import {
   SendHelloButton,
   Card,
 } from '../components';
-import { useLazyGetAccountsQuery, useLazyRequestQuery } from '../utils/api';
+import { request, useLazyGetAccountsQuery, useLazyRequestQuery } from '../utils/api';
 
 const Container = styled.div`
   display: flex;
@@ -110,6 +110,7 @@ const Index = () => {
   const handleConnectClick = async () => {
     try {
       await connectSnap();
+      await getAccounts();
       const installedSnap = await getSnap();
 
       dispatch({
@@ -124,7 +125,7 @@ const Index = () => {
 
   const handleSendHelloClick = async () => {
     try {
-      await sendHello();
+      const rest = await sendHello();
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -133,20 +134,29 @@ const Index = () => {
 
 
   const handleSendTransaction = () => {
-    assert(accounts?.length);
+    sendHello().then((data) => {
+      console.log(data);
+      if(data!=='YES') {
+        return;
+      }
 
-    const account = accounts[0];
-    request({
-      method: 'eth_sendTransaction',
-      params: [
-        {
-          from: account,
-          to: account,
-          value: '0x0',
-          data: '0x1',
-        },
-      ],
-    });
+      assert(accounts?.length);
+
+      const account = accounts[0];
+      request({
+        method: 'eth_sendTransaction',
+        params: [
+          {
+            from: account,
+            to: account,
+            value: '0x0',
+            data: '0x1',
+          },
+        ],
+      });
+    })
+
+
   };
 
   return (

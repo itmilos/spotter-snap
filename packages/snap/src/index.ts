@@ -1,6 +1,8 @@
 import { OnRpcRequestHandler, OnTransactionHandler } from '@metamask/snaps-types';
 import { heading, panel, text } from '@metamask/snaps-ui';
 
+import { hasProperty, isObject } from '@metamask/utils';
+
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -12,6 +14,7 @@ import { heading, panel, text } from '@metamask/snaps-ui';
  * @throws If the request method is not valid for this snap.
  */
 
+let isHighDetected = false;
 
 const getColor = (result: number) => {
   switch (result) {
@@ -25,75 +28,95 @@ const getColor = (result: number) => {
 };
 
 
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => {
+  const response = await fetch(
+    `https://catfact.ninja/fact`,
+  );
+
+  const res = await response.json();
+
+  isHighDetected = true;
+
+
+
   switch (request.method) {
-    case 'security_risk':
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'prompt',
-          content: panel([
-            heading('You are about to sign ' + getColor(1) + ' security risk'),
-            text('Please Confirm by typing YES'),
-          ]),
-          placeholder: 'placeholder',
-        },
-      });
-    case 'security_mid':
-      return snap.request({
-        content: panel([
-          heading(getColor(2) + ' security risk'),
-          text('You are about to sign ' + getColor() + ' security'),
-        ])
-      });
-    case 'security_norisk':
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'prompt',
-          content: panel([
-            heading(getColor() + ' security'),
-            text('You are about to sign ' + getColor() + ' security'),
-          ]),
-          placeholder: 'placeholder',
-        },
-      });
-    case 'hello1':
-      return snap.request({
-        // method: 'snap_dialog',
-        // params: {
-        //   type: 'confirmation',
-        //   content: panel([
-        //     text("You are about to sign contract with " + getColor(3) + " security"),
-        //   ]),
-        // },
-        method: 'snap_dialog',
-        params: {
-          type: 'prompt',
-          content: panel([
-            heading('You are about to singn' + getColor(1) + ' security'),
-            text('Please Confirm by typing YES'),
-          ]),
-          placeholder: 'placeholder',
-        },
-      });
+    // case 'security_risk':
+    //   return snap.request({
+    //     method: 'snap_dialog',
+    //     params: {
+    //       type: 'prompt',
+    //       content: panel([
+    //         heading('You are about to sign ' + getColor(1) + ' security risk'),
+    //         text('Please Confirm by typing YES'),
+    //       ]),
+    //       placeholder: 'placeholder',
+    //     },
+    //   });
+    // case 'security_mid':
+    //   return snap.request({
+    //     content: panel([
+    //       heading(getColor(2) + ' security risk'),
+    //       text('You are about to sign ' + getColor() + ' security'),
+    //     ])
+    //   });
+    // case 'security_norisk':
+    //   return snap.request({
+    //     method: 'snap_dialog',
+    //     params: {
+    //       type: 'prompt',
+    //       content: panel([
+    //         heading(getColor() + ' security'),
+    //         text('You are about to sign ' + getColor() + ' security'),
+    //       ]),
+    //       placeholder: 'placeholder',
+    //     },
+    //   });
+    // case 'hello1':
+    //   return snap.request({
+    //     // method: 'snap_dialog',
+    //     // params: {
+    //     //   type: 'confirmation',
+    //     //   content: panel([
+    //     //     text("You are about to sign contract with " + getColor(3) + " security"),
+    //     //   ]),
+    //     // },
+    //     method: 'snap_dialog',
+    //     params: {
+    //       type: 'prompt',
+    //       content: panel([
+    //         heading('You are about to singn' + getColor(1) + ' security'),
+    //         text('Please Confirm by typing YES'),
+    //       ]),
+    //       placeholder: 'placeholder',
+    //     },
+    //   });
     default:
-      throw new Error('Method not found.');
+      return snap.request({
+            method: 'snap_dialog',
+            params: {
+              type: 'prompt',
+              content: panel([
+                heading('You are about to sign ' + getColor(1) + ' security risk'),
+                text('Please Confirm by typing YES' + JSON.stringify(res, null, 2))
+              ]),
+              placeholder: 'placeholder',
+            },
+          });
   }
 };
 
 
 export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
+
+
   if (
     !isObject(transaction) ||
     !hasProperty(transaction, 'data') ||
     typeof transaction.data !== 'string'
   ) {
     console.warn('Unknown transaction type.');
-    return { content: text('Unknown transaction') };
+    return { content: text("You are about to sign contract with " + getColor(3) + " security") };
   }
-
-  return { content: text('**Test:** Successful') };
 };
 
 //
