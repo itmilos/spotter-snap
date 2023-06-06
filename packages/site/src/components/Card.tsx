@@ -9,13 +9,14 @@ type CardProps = {
   };
   disabled?: boolean;
   fullWidth?: boolean;
+  background: '';
 };
 
 const CardWrapper = styled.div<{ fullWidth?: boolean; disabled: boolean }>`
   display: flex;
   flex-direction: column;
   width: ${({ fullWidth }) => (fullWidth ? '100%' : '250px')};
-  background-color: ${({ theme }) => theme.colors.card.default};
+  background-color: ${({ background }) => (background ? background : background)};
   margin-top: 2.4rem;
   margin-bottom: 2.4rem;
   padding: 2.4rem;
@@ -45,10 +46,10 @@ const Description = styled.div`
   margin-bottom: 2.4rem;
 `;
 
-export const Card = ({ content, disabled = false, fullWidth }: CardProps) => {
+export const Card = ({ content, disabled = false, fullWidth, background }: CardProps) => {
   const { title, description, button } = content;
   return (
-    <CardWrapper fullWidth={fullWidth} disabled={disabled}>
+    <CardWrapper background={background} fullWidth={fullWidth} disabled={disabled}>
       {title && (
         <Title>{title}</Title>
       )}

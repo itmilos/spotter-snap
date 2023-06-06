@@ -38,58 +38,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
   isHighDetected = true;
 
 
-
   switch (request.method) {
-    // case 'security_risk':
-    //   return snap.request({
-    //     method: 'snap_dialog',
-    //     params: {
-    //       type: 'prompt',
-    //       content: panel([
-    //         heading('You are about to sign ' + getColor(1) + ' security risk'),
-    //         text('Please Confirm by typing YES'),
-    //       ]),
-    //       placeholder: 'placeholder',
-    //     },
-    //   });
-    // case 'security_mid':
-    //   return snap.request({
-    //     content: panel([
-    //       heading(getColor(2) + ' security risk'),
-    //       text('You are about to sign ' + getColor() + ' security'),
-    //     ])
-    //   });
-    // case 'security_norisk':
-    //   return snap.request({
-    //     method: 'snap_dialog',
-    //     params: {
-    //       type: 'prompt',
-    //       content: panel([
-    //         heading(getColor() + ' security'),
-    //         text('You are about to sign ' + getColor() + ' security'),
-    //       ]),
-    //       placeholder: 'placeholder',
-    //     },
-    //   });
-    // case 'hello1':
-    //   return snap.request({
-    //     // method: 'snap_dialog',
-    //     // params: {
-    //     //   type: 'confirmation',
-    //     //   content: panel([
-    //     //     text("You are about to sign contract with " + getColor(3) + " security"),
-    //     //   ]),
-    //     // },
-    //     method: 'snap_dialog',
-    //     params: {
-    //       type: 'prompt',
-    //       content: panel([
-    //         heading('You are about to singn' + getColor(1) + ' security'),
-    //         text('Please Confirm by typing YES'),
-    //       ]),
-    //       placeholder: 'placeholder',
-    //     },
-    //   });
     default:
       return snap.request({
             method: 'snap_dialog',
@@ -107,16 +56,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) => 
 
 
 export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
-
-
-  if (
-    !isObject(transaction) ||
-    !hasProperty(transaction, 'data') ||
-    typeof transaction.data !== 'string'
-  ) {
-    console.warn('Unknown transaction type.');
-    return { content: text("You are about to sign contract with " + getColor(3) + " security") };
-  }
+  return {
+    content: panel([
+      heading(getColor() + ' security'),
+      text('You are about to sign contract with ' + getColor() + ' security'),
+    ]),
+  };
+  // if (
+  //   !isObject(transaction) ||
+  //   !hasProperty(transaction, 'data') ||
+  //   typeof transaction.data !== 'string'
+  // ) {
+  //
+  // }
 };
 
 //

@@ -63,15 +63,9 @@ export const Header = ({
     <HeaderWrapper>
       <LogoWrapper>
         <SnapLogo color={theme.colors.icon.default} size={36} />
-        <Title>template-snap</Title>
+        <Title>Spotter Snap</Title>
       </LogoWrapper>
-      <RightContainer>
-        <Toggle
-          onToggle={handleToggleClick}
-          defaultChecked={getThemePreference()}
-        />
-        <HeaderButtons state={state} onConnectClick={handleConnectClick} />
-      </RightContainer>
+
     </HeaderWrapper>
   );
 };

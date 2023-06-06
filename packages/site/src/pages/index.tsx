@@ -12,7 +12,6 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
   Card,
 } from '../components';
 import { request, useLazyGetAccountsQuery, useLazyRequestQuery } from '../utils/api';
@@ -110,7 +109,9 @@ const Index = () => {
   const handleConnectClick = async () => {
     try {
       await connectSnap();
+
       await getAccounts();
+
       const installedSnap = await getSnap();
 
       dispatch({
@@ -135,7 +136,6 @@ const Index = () => {
 
   const handleSendTransaction = () => {
     sendHello().then((data) => {
-      console.log(data);
       if(data!=='YES') {
         return;
       }
@@ -162,10 +162,10 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Spotter Snap
       </Heading>
       <Subtitle>
-        Get started by editing <code>src/index.ts</code>
+        Real-time notifications on potential hacks. Stay secure!
       </Subtitle>
       <CardContainer>
         {state.error && (
@@ -173,6 +173,18 @@ const Index = () => {
             <b>An error happened:</b> {state.error.message}
           </ErrorMessage>
         )}
+        <Card
+          content={{
+            title: 'Reconnect',
+            description:
+              'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
+            button: (
+              <ReconnectButton
+                onClick={handleConnectClick}
+              />
+            ),
+          }}
+        />
         {!state.isFlask && (
           <Card
             content={{
@@ -184,28 +196,13 @@ const Index = () => {
             fullWidth
           />
         )}
-        {!state.installedSnap && (
-          <Card
-            content={{
-              title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
-              button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.isFlask}
-                />
-              ),
-            }}
-            disabled={!state.isFlask}
-          />
-        )}
         {state.installedSnap && (
           <Card
+            background={'red'}
             content={{
-              title: 'tx',
+              title: 'High Security Risk',
               description:
-                'Get started by connecting to and installing the example snap.',
+                'Try high risk contract.',
               button: (
                 <ConnectButton
                   onClick={handleSendTransaction}
@@ -216,49 +213,40 @@ const Index = () => {
             disabled={!state.isFlask}
           />
         )}
-        {shouldDisplayReconnectButton(state.installedSnap) && (
+        {state.installedSnap && (
           <Card
+            background={'orange'}
             content={{
-              title: 'Reconnect',
+              title: 'Mid Security Risk',
               description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
+                'Try mid risk contract.',
               button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
+                <ConnectButton
+                  onClick={handleSendTransaction}
+                  disabled={!state.isFlask}
                 />
               ),
             }}
-            disabled={!state.installedSnap}
+            disabled={!state.isFlask}
           />
         )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            state.isFlask &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice>
+        {state.installedSnap && (
+          <Card
+            background={'green'}
+            content={{
+              title: 'No Security Risk',
+              description:
+                'Try no security risk contract.',
+              button: (
+                <ConnectButton
+                  onClick={handleSendTransaction}
+                  disabled={!state.isFlask}
+                />
+              ),
+            }}
+            disabled={!state.isFlask}
+          />
+        )}
       </CardContainer>
     </Container>
   );

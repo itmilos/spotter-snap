@@ -35,13 +35,13 @@ export const Footer = () => {
 
   return (
     <FooterWrapper>
-      <PoweredByButton href="https://docs.metamask.io/" target="_blank">
-        <MetaMaskFox />
-        <PoweredByContainer>
-          <PoweredBy color={theme.colors.text.muted} />
-          <MetaMask color={theme.colors.text.default} />
-        </PoweredByContainer>
-      </PoweredByButton>
+      {/*<PoweredByButton href="https://docs.metamask.io/" target="_blank">*/}
+      {/*  <MetaMaskFox />*/}
+      {/*  <PoweredByContainer>*/}
+      {/*    <PoweredBy color={theme.colors.text.muted} />*/}
+      {/*    <MetaMask color={theme.colors.text.default} />*/}
+      {/*  </PoweredByContainer>*/}
+      {/*</PoweredByButton>*/}
     </FooterWrapper>
   );
 };
