@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
+import { assert } from '@metamask/utils';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
@@ -14,6 +15,7 @@ import {
   SendHelloButton,
   Card,
 } from '../components';
+import { useLazyGetAccountsQuery, useLazyRequestQuery } from '../utils/api';
 
 const Container = styled.div`
   display: flex;
@@ -100,6 +102,9 @@ const ErrorMessage = styled.div`
 `;
 
 const Index = () => {
+  const [getAccounts, { isLoading: isLoadingAccounts, data: accounts }] =
+    useLazyGetAccountsQuery();
+
   const [state, dispatch] = useContext(MetaMaskContext);
 
   const handleConnectClick = async () => {
@@ -124,6 +129,24 @@ const Index = () => {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
     }
+  };
+
+
+  const handleSendTransaction = () => {
+    assert(accounts?.length);
+
+    const account = accounts[0];
+    request({
+      method: 'eth_sendTransaction',
+      params: [
+        {
+          from: account,
+          to: account,
+          value: '0x0',
+          data: '0x1',
+        },
+      ],
+    });
   };
 
   return (
@@ -160,6 +183,22 @@ const Index = () => {
               button: (
                 <ConnectButton
                   onClick={handleConnectClick}
+                  disabled={!state.isFlask}
+                />
+              ),
+            }}
+            disabled={!state.isFlask}
+          />
+        )}
+        {state.installedSnap && (
+          <Card
+            content={{
+              title: 'tx',
+              description:
+                'Get started by connecting to and installing the example snap.',
+              button: (
+                <ConnectButton
+                  onClick={handleSendTransaction}
                   disabled={!state.isFlask}
                 />
               ),
