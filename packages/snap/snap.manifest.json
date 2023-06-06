@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example Snap",
+  "description": "Metamask snap for real-time notifications on potential hacks. Stay secure!",
+  "proposedName": "Spotter Snap.",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "usoZPr0F4J12BaVbuDQRCCIW2cj/N5gZD7ccOJfDZV8=",
+    "shasum": "qrSp2/UGYMUQrZJBmnFS8JfBS5g8yVejTmdUyhBLwOY=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
