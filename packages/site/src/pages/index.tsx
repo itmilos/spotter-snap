@@ -1,12 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { assert } from '@metamask/utils';
+// import { assert } from '@metamask/utils';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
   sendHello,
-  shouldDisplayReconnectButton,
 } from '../utils';
 import {
   ConnectButton,
@@ -14,7 +13,7 @@ import {
   ReconnectButton,
   Card,
 } from '../components';
-import { request, useLazyGetAccountsQuery, useLazyRequestQuery } from '../utils/api';
+import { request, useLazyGetAccountsQuery } from '../utils/api';
 
 const Container = styled.div`
   display: flex;
@@ -106,11 +105,16 @@ const Index = () => {
 
   const [state, dispatch] = useContext(MetaMaskContext);
 
+  useEffect(() => {
+    getAccounts()
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      .then((accounts) => console.log(`###: accounts`, accounts))
+      .catch((e) => console.log(`###: e`, e));
+  }, []);
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
-
-      await getAccounts();
 
       const installedSnap = await getSnap();
 
@@ -124,37 +128,36 @@ const Index = () => {
     }
   };
 
-  const handleSendHelloClick = async () => {
-    try {
-      const rest = await sendHello();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  // const handleSendHelloClick = async () => {
+  //   try {
+  //     await sendHello();
+  //   } catch (e) {
+  //     console.error(e);
+  //     dispatch({ type: MetamaskActions.SetError, payload: e });
+  //   }
+  // };
 
 
-  const handleSendTransaction = () => {
-    sendHello().then((data) => {
-      if(data!=='YES') {
-        return;
-      }
+  const handleSendTransaction = (contractAddress: string, score: number) => () => {
+    console.log(`###: accountsHandleTransaction`, accounts);
+    // assert(accounts?.length);
 
-      assert(accounts?.length);
 
-      const account = accounts[0];
+
+    const account = accounts[0];
+    // @ts-ignore
       request({
-        method: 'eth_sendTransaction',
-        params: [
-          {
-            from: account,
-            to: account,
-            value: '0x0',
-            data: '0x1',
-          },
-        ],
-      });
-    })
+      method: 'eth_sendTransaction',
+      params: [
+        {
+          from: account,
+          to: contractAddress,
+          value: '0x0',
+          data: '0x1',
+          score,
+        },
+      ],
+    });
 
 
   };
@@ -205,7 +208,10 @@ const Index = () => {
                 'Try high risk contract.',
               button: (
                 <ConnectButton
-                  onClick={handleSendTransaction}
+                  onClick={handleSendTransaction(
+                    `0xssssss`,
+                    1,
+                  )}
                   disabled={!state.isFlask}
                 />
               ),
@@ -222,7 +228,10 @@ const Index = () => {
                 'Try mid risk contract.',
               button: (
                 <ConnectButton
-                  onClick={handleSendTransaction}
+                  onClick={handleSendTransaction(
+                    `0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`,
+                    2,
+                  )}
                   disabled={!state.isFlask}
                 />
               ),
@@ -239,7 +248,10 @@ const Index = () => {
                 'Try no security risk contract.',
               button: (
                 <ConnectButton
-                  onClick={handleSendTransaction}
+                  onClick={handleSendTransaction(
+                    `0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9`,
+                    3,
+                  )}
                   disabled={!state.isFlask}
                 />
               ),
