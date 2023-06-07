@@ -54,13 +54,15 @@ export const onRpcRequest: OnRpcRequestHandler = async ({origin, request}) => {
 export const onTransaction: OnTransactionHandler = async ({transaction}) => {
   const targetContractAddress = transaction.to;
 
-  let riskScore = 0;
+  let riskScore;
 
   if (targetContractAddress === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-    riskScore = 2;
+    riskScore = 0;
   } else if (
     targetContractAddress === '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9'
   ) {
+    riskScore = 2;
+  } else {
     riskScore = 3;
   }
 
