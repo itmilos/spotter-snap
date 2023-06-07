@@ -1,7 +1,7 @@
-import { useContext, useEffect } from 'react';
+import {useContext, useEffect} from 'react';
 import styled from 'styled-components';
 // import { assert } from '@metamask/utils';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
+import {MetamaskActions, MetaMaskContext} from '../hooks';
 import {
   connectSnap,
   getSnap,
@@ -13,7 +13,7 @@ import {
   ReconnectButton,
   Card,
 } from '../components';
-import { request, useLazyGetAccountsQuery } from '../utils/api';
+import {request, useLazyGetAccountsQuery} from '../utils/api';
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +22,8 @@ const Container = styled.div`
   flex: 1;
   margin-top: 7.6rem;
   margin-bottom: 7.6rem;
-  ${({ theme }) => theme.mediaQueries.small} {
+
+  ${({theme}) => theme.mediaQueries.small} {
     padding-left: 2.4rem;
     padding-right: 2.4rem;
     margin-top: 2rem;
@@ -42,12 +43,13 @@ const Span = styled.span`
 `;
 
 const Subtitle = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.large};
+  font-size: ${({theme}) => theme.fontSizes.large};
   font-weight: 500;
   margin-top: 0;
   margin-bottom: 0;
-  ${({ theme }) => theme.mediaQueries.small} {
-    font-size: ${({ theme }) => theme.fontSizes.text};
+
+  ${({theme}) => theme.mediaQueries.small} {
+    font-size: ${({theme}) => theme.fontSizes.text};
   }
 `;
 
@@ -63,10 +65,10 @@ const CardContainer = styled.div`
 `;
 
 const Notice = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.alternative};
-  border: 1px solid ${({ theme }) => theme.colors.border.default};
-  color: ${({ theme }) => theme.colors.text.alternative};
-  border-radius: ${({ theme }) => theme.radii.default};
+  background-color: ${({theme}) => theme.colors.background.alternative};
+  border: 1px solid ${({theme}) => theme.colors.border.default};
+  color: ${({theme}) => theme.colors.text.alternative};
+  border-radius: ${({theme}) => theme.radii.default};
   padding: 2.4rem;
   margin-top: 2.4rem;
   max-width: 60rem;
@@ -75,23 +77,25 @@ const Notice = styled.div`
   & > * {
     margin: 0;
   }
-  ${({ theme }) => theme.mediaQueries.small} {
+
+  ${({theme}) => theme.mediaQueries.small} {
     margin-top: 1.2rem;
     padding: 1.6rem;
   }
 `;
 
 const ErrorMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.error.muted};
-  border: 1px solid ${({ theme }) => theme.colors.error.default};
-  color: ${({ theme }) => theme.colors.error.alternative};
-  border-radius: ${({ theme }) => theme.radii.default};
+  background-color: ${({theme}) => theme.colors.error.muted};
+  border: 1px solid ${({theme}) => theme.colors.error.default};
+  color: ${({theme}) => theme.colors.error.alternative};
+  border-radius: ${({theme}) => theme.radii.default};
   padding: 2.4rem;
   margin-bottom: 2.4rem;
   margin-top: 2.4rem;
   max-width: 60rem;
   width: 100%;
-  ${({ theme }) => theme.mediaQueries.small} {
+
+  ${({theme}) => theme.mediaQueries.small} {
     padding: 1.6rem;
     margin-bottom: 1.2rem;
     margin-top: 1.2rem;
@@ -100,7 +104,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Index = () => {
-  const [getAccounts, { isLoading: isLoadingAccounts, data: accounts }] =
+  const [getAccounts, {isLoading: isLoadingAccounts, data: accounts}] =
     useLazyGetAccountsQuery();
 
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -124,7 +128,7 @@ const Index = () => {
       });
     } catch (e) {
       console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      dispatch({type: MetamaskActions.SetError, payload: e});
     }
   };
 
@@ -138,15 +142,13 @@ const Index = () => {
   // };
 
 
-  const handleSendTransaction = (contractAddress: string, score: number) => () => {
-    console.log(`###: accountsHandleTransaction`, accounts);
+  const handleSendTransaction = (contractAddress: string) => () => {
     // assert(accounts?.length);
-
 
 
     const account = accounts[0];
     // @ts-ignore
-      request({
+    request({
       method: 'eth_sendTransaction',
       params: [
         {
@@ -154,7 +156,6 @@ const Index = () => {
           to: contractAddress,
           value: '0x0',
           data: '0x1',
-          score,
         },
       ],
     });
@@ -162,6 +163,7 @@ const Index = () => {
 
   };
 
+  // @ts-ignore
   return (
     <Container>
       <Heading>
@@ -194,7 +196,7 @@ const Index = () => {
               title: 'Install',
               description:
                 'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
+              button: <InstallFlaskButton/>,
             }}
             fullWidth
           />
@@ -209,8 +211,7 @@ const Index = () => {
               button: (
                 <ConnectButton
                   onClick={handleSendTransaction(
-                    `0xssssss`,
-                    1,
+                    `0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2`,
                   )}
                   disabled={!state.isFlask}
                 />
@@ -224,13 +225,11 @@ const Index = () => {
             background={'orange'}
             content={{
               title: 'Mid Security Risk',
-              description:
-                'Try mid risk contract.',
+              description: 'Try mid risk contract.',
               button: (
                 <ConnectButton
                   onClick={handleSendTransaction(
-                    `0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`,
-                    2,
+                    `0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9`,
                   )}
                   disabled={!state.isFlask}
                 />
@@ -249,8 +248,7 @@ const Index = () => {
               button: (
                 <ConnectButton
                   onClick={handleSendTransaction(
-                    `0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9`,
-                    3,
+                    `0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE8`,
                   )}
                   disabled={!state.isFlask}
                 />
